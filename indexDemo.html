@@ -1,0 +1,625 @@
+<HTML>
+<HEAD><TITLE>D8读卡器测试</TITLE></HEAD>
+<BODY>
+<OBJECT id=rd codeBase="comRD800.cab" WIDTH="0" HEIGHT="0" classid="clsid:638B238E-EB84-4933-B3C8-854B86140668"></OBJECT>
+
+<script language=javascript>
+
+
+    function m1CardTest()
+    {
+
+        var st;
+        var lSnr;
+        var msg= "";
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+=("dc_init error!");
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_init ok!")+"</br>";
+
+        rd.dc_config_card(65);
+
+        st = rd.dc_card_double(0);
+        if(st != 0)
+        {
+            msg+=("dc_card error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_card ok!</br>");
+
+        msg+="card id is : "+(rd.get_bstrRBuffer_asc+"</br>");
+
+        rd.put_bstrSBuffer_asc = "FFFFFFFFFFFF";
+        st = rd.dc_load_key(0, 0);
+        if(st != 0)
+        {
+            msg+=("dc_load_key error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_load_key ok!</br>");
+
+        st = rd.dc_authentication(0, 0);
+        if(st != 0)
+        {
+            msg+=("dc_authentication error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_authentication ok!</br>");
+
+        rd.put_bstrSBuffer_asc = "31323334353637383930313233343536";
+        st = rd.dc_write(2);
+        if(st != 0)
+        {
+            msg+=("dc_write error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_write ok!</br>");
+
+        st = rd.dc_read(2);
+        if(st != 0)
+        {
+            msg+=("dc_read error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_read ok!</br>");
+        msg+="display the infomation in the format of characters " + (rd.get_bstrRBuffer+"</br>");
+        msg+="display the infomation in the format of bytes " + (rd.get_bstrRBuffer_asc+"</br>");
+
+        rd.put_bstrSBuffer_asc = "30303030303030303030303030303030";
+        st = rd.dc_write(2);
+        if(st != 0)
+        {
+            msg+=("dc_write error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_write ok!</br>");
+
+        st = rd.dc_read(2);
+        if(st != 0)
+        {
+            msg+=("dc_read error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_read ok!</br>");
+        msg+="display the infomation in the format of characters " + (rd.get_bstrRBuffer+"</br>");
+        msg+="display the infomation in the format of bytes " + (rd.get_bstrRBuffer_asc+"</br>");
+
+
+        st = rd.dc_beep(5);
+        if(st != 0)
+        {
+            msg+=("dc_beep error!");
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_beep ok!</br>");
+
+        st = rd.dc_exit();
+        if(st != 0)
+        {
+            msg+=("dc_exit error!");
+            showMsg(msg);
+            return;
+        }
+        msg+=("dc_exit ok!</br>");
+        showMsg(msg);
+    }
+
+    typeATest = function () {
+        var st;
+        var rlen;
+        var rbuff;
+        var msg = "";
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+="dc init error";
+            showMsg(msg);
+            return;
+        }
+        msg+="dc init ok</br>";
+
+        rd.dc_config_card(65);
+
+        st = rd.dc_card(0, rbuff);
+        if(st!=0)
+        {
+            msg+="dc card error </br>";
+            rd.dc_exit();showMsg(msg);
+            return;
+        }
+        msg+="dc card ok </br>";
+
+        msg+="card id is : "+(rd.get_bstrRBuffer_asc+"</br>");
+
+        st = rd.dc_pro_reset(rlen);
+        if(st!=0)
+        {
+            msg+="dc pro reset error </br>";
+            rd.dc_exit();showMsg(msg);
+            return;
+        }
+        msg+="dc pro reset ok </br>";
+
+        msg+="reset infomation : "+(rd.get_bstrRBuffer_asc+"</br>");
+
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st =rd.dc_pro_command(5,rlen);
+        if(st!=0)
+        {
+            msg+="get a random number error </br>";
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+="get a random number ok </br>";
+
+        rd.dc_beep(5);
+
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+        showMsg(msg);
+        rd.dc_exit();
+    }
+
+    function typeBTest()
+    {
+        var st;
+        var rlen;
+        var rbuff;
+        var msg = "";
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+="dc init error";
+            showMsg(msg);
+            return;
+        }
+        msg+="dc init ok</br>";
+
+        rd.dc_config_card(66);
+
+        st = rd.dc_card_b();
+        if(st!=0)
+        {
+            msg+="dc card error </br>";
+            rd.dc_exit();showMsg(msg);
+            return;
+        }
+        msg+="dc card ok </br>";
+
+        msg+="card reset infomation "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st =rd.dc_pro_command(5,rlen);
+        if(st!=0)
+        {
+            msg+="get a random number error </br>";
+            rd.dc_exit();
+            showMsg(msg);
+            return;
+        }
+        msg+="get a random number ok </br>";
+
+        rd.dc_beep(5);
+
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+        showMsg(msg);
+        rd.dc_exit();
+
+    }
+
+    function M4428Test()
+    {
+        var st;
+        var rlen;
+        var rbuff;
+        var msg = "";
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+="dc init error";
+            showMsg(msg);
+            return;
+        }
+        msg+="dc init ok</br>";
+
+        st = rd.dc_setcpu(12);
+        if(st != 0)
+        {
+            msg+="dc set cpu error"
+            showmsg(msg);
+            dc_exit();
+            return;
+        }
+        msg+="dc set cpu ok</br>";
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st = rd.dc_read_4428(160,10);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        st = rd.dc_readpincount_4428();
+        if (st <= 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+
+        rd.put_bstrSBuffer_asc = "ffff";
+        st = rd.dc_verifypin_4428();
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.put_bstrSBuffer_asc = "decacd1234567890ccee";
+        st = rd.dc_write_4428(160,10);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st = rd.dc_read_4428(160,10);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.dc_beep(5);
+        showMsg(msg);
+        rd.dc_exit();
+
+    }
+
+    function M4442Test()
+    {
+        var st;
+        var rlen;
+        var rbuff;
+        var msg = "";
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+="dc init error";
+            showMsg(msg);
+            return;
+        }
+        msg+="dc init ok</br>";
+
+        st = rd.dc_setcpu(12);
+        if(st != 0)
+        {
+            msg+="dc set cpu error"
+            showmsg(msg);
+            dc_exit();
+            return;
+        }
+        msg+="dc set cpu ok</br>";
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st = rd.dc_read_4442(160,10);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        st = rd.dc_readpincount_4442();
+        if (st <= 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+
+        rd.put_bstrSBuffer_asc = "ffffff";
+        st = rd.dc_verifypin_4442();
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.put_bstrSBuffer_asc = "decacd1234567890ccee";
+        st = rd.dc_write_4442(160,10);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st = rd.dc_read_4442(160,10);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            rd.dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+        rd.dc_beep(5);
+        showMsg(msg);
+        rd.dc_exit();
+
+    }
+
+    function contactCpuTest()
+    {
+        var st;
+        var rlen;
+        var rbuff;
+        var msg = "";
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+="dc init error";
+            showMsg(msg);
+            return;
+        }
+        msg+="dc init ok</br>";
+
+        st = rd.dc_setcpu(12);
+        if(st != 0)
+        {
+            msg+="dc set cpu error"
+            showmsg(msg);
+            dc_exit();
+            return;
+        }
+        msg+="dc set cpu ok</br>";
+
+        st = rd.dc_cpureset(rlen);
+        if(st != 0)
+        {
+            msg+="dc cpu reset error";
+            showMsg(msg)
+            dc_exit();
+            return;
+        }
+        msg+="dc cpu reset ok</br>";
+
+        msg+="reset infomation : "+(rd.get_bstrRBuffer_asc+"</br>");
+
+        rd.put_bstrSBuffer_asc = "0084000008";
+        st = rd.dc_cpuapdu(5,rlen);
+        if(st != 0)
+        {
+            msg+="get a random number error";
+            showMsg(msg)
+            dc_exit();
+            return;
+        }
+        msg+="get a random number ok</br>";
+        msg+=" the random number is "+(rd.get_bstrRBuffer_asc)+ " </br>";
+
+
+        rd.dc_beep(5);
+        showMsg(msg);
+        rd.dc_exit();
+
+    }
+
+
+    function idCardTest()
+    {
+
+        var st; //主要用于返回值
+        var lSnr; //本用于取序列号，但在javascript只是当成dc_card函数的一个临时变量
+        var rlen; //用于取一些返回值长度，但在javascript只是当成dc_card函数的一个临时变量
+        var i,m,n;
+        var msg = "";
+
+
+
+        st = rd.dc_init(100, 115200);
+        if(st <= 0)
+        {
+            msg+="dc init error";
+            showMsg(msg);
+            return;
+        }
+        msg+="dc init ok</br>";
+
+        //******************  身份证  **************************
+        //alert("开始读取身份证数据!");
+        //rd.DC_find_i_d();
+        st = rd.DC_start_i_d();
+        if (st < 0)
+        {
+            msg+="读取身份证信息失败";
+            showMsg(msg);
+            return;
+        }
+        var name = rd.DC_i_d_query_name();
+        var sex = rd.DC_i_d_query_sex();
+        var nation = rd.DC_i_d_query_nation();
+        var birth = rd.DC_i_d_query_birth();
+        var address = rd.DC_i_d_query_address();
+        var number = rd.DC_i_d_query_id_number();
+        var department = rd.DC_i_d_query_department();
+        var expire = rd.DC_i_d_query_expire_day();
+        var st=rd.DC_i_d_query_photo_bmp_buffer();
+        var bmp_data_str=rd.get_bstrRBuffer_asc;
+        rd.put_bstrSBuffer = "c:/me.bmp";
+        st = rd.DC_i_d_query_photo_file();
+
+
+        rd.DC_end_i_d();
+
+        msg += "姓名 ： "+ name + "</br>"
+            +"性别 ： "+ sex + "</br>"
+            +"民族 ： "+ nation + "</br>"
+            +"生日 ： "+ birth + "</br>"
+            +"地址 ： "+ address +"</br>"
+            +"身份证号 ： "+ number +"</br>"
+            +"身份证签发机关 : "+department +"</br>"
+            +"有效期 ： "+ expire +"</br>"
+            +"照片 bmp 文件十六进制数据的显示表示：" +  bmp_data_str + "</br>"
+            +'<img src="c:/me.bmp" alt="me">';
+        showMsg(msg);
+    }
+
+
+    /*typeATest = function ()
+    {//typeA非接触式cpu卡测试
+
+        var rlen,mrandom,resetbuff,msg = "";
+        rd.dc_reset();//复位射频
+
+        result = rd.dc_config_card(65);//配置为A型卡片
+        if(result < 0)
+        {
+            return;
+        }
+
+        result = rd.dc_card_pro(rlen);//寻卡
+        if(result < 0)
+        {
+            msg += "寻卡失败";
+            showMsg(msg);
+            return;
+        }
+        msg+="寻卡成功</br>";
+
+        result =rd. dc_pro_reset(rlen);//复位卡片
+        if(result < 0)
+        {
+            msg += "复位失败</br>"
+            showMsg(msg);
+            return;
+        }
+        resetbuff = rd.get_bstrRBuffer_asc;//获取复位信息
+        msg += ("复位成功" + resetbuff)+"</br>";
+
+
+        rd.put_bstrSBuffer_asc = "0084000008";//传送需要发送的指令数据
+        result = rd.dc_pro_commandlink (5,rlen, 10,56);//发送指令
+        if(result < 0)
+        {
+            msg += "发送指令失败</br>";
+            showMsg(msg);
+            return;
+        }
+        mrandom = rd.get_bstrRBuffer_asc ;
+        msg += "取随机数成功，</br>随机数为 ："+ mrandom+"</br>";
+        showMsg(msg);
+
+
+    }*/
+
+    function showMsg(msg)
+    {
+        x=document.getElementById("demo");
+        x.innerHTML=msg;
+    }
+
+    function mInit()
+    {
+        rd.dc_init(100, 115200);
+    }
+
+    function mBeep()
+    {
+        rd.dc_beep(2);
+    }
+
+    function mExit()
+    {
+        rd.dc_exit();
+    }
+
+</script>
+
+<!-- Insert HTML here -->
+
+<table>
+    <tr>
+        <td><button type="button" onclick="m1CardTest()" style="width:200">m1 card test         </button></td>
+        <td><button type="button" onclick="typeATest()" style="width:200">type a card test     </button></td>
+        <td><button type="button" onclick="typeBTest()" style="width:200">type b card test     </button></td>
+        <td><button type="button" onclick="contactCpuTest()" style="width:200">contact cpu card test</button></td>
+    </tr>
+    <tr>
+        <td><button type="button" onclick="mInit()" style="width:200">mInit         </button></td>
+        <td><button type="button" onclick="M4442Test()" style="width:200">M4442Test   </button></td>
+        <td><button type="button" onclick="mExit()" style="width:200">mExit     </button></td>
+        <td><button type="button" onclick="M4428Test()" style="width:200">4428</button></td>
+        <td><button type="button" onclick="idCardTest()" style="width:200">idCardTest</button></td>
+        idCardTest
+    </tr>
+
+</table>
+
+<p id="demo">
+    test log
+</p>
+
+</BODY>
+</HTML>

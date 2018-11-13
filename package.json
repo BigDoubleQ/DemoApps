@@ -1,0 +1,39 @@
+{
+  "name": "demoapps",
+  "version": "1.0.0",
+  "description": "",
+  "author": "arnozhang",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-builder install-app-deps",
+    "watch": "watchify app/appEntry.js -t babelify -o public/js/bundle.js --debug --verbose",
+    "package": "electron-packager ./app DemoApps --all --out=./outApps --electron-version=1.0.0 --overwrite --icon=./public/img/app-icon.ico"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-plugin-transform-es2015-spread": "^6.8.0",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.0.1",
+    "electron-builder": "^20.29.0",
+    "electron-packager": "^12.2.0",
+    "electron-rebuild": "^1.8.2",
+    "electron-prebuilt": "^1.4.13",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "ffi": "^2.2.0",
+    "material-ui": "^0.16.0",
+    "node-gyp": "^3.8.0",
+    "react": "^15.4.0",
+    "react-color": "2.1.0",
+    "react-dom": "^15.4.0",
+    "react-tap-event-plugin": "^2.0.0",
+    "ref": "^1.3.5",
+    "electron-reload": "^1.0.0",
+    "winax": "^1.0.16"
+  }
+}
